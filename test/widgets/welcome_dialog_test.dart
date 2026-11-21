@@ -12,7 +12,6 @@ void main() {
     expect(find.text('Welcome to ApplyTrack'), findsOneWidget);
     expect(find.text('Start tracking'), findsOneWidget);
   });
-}
 
   testWidgets('show() returns true after tapping Start tracking',
       (tester) async {
@@ -37,3 +36,4 @@ void main() {
     await tester.pumpAndSettle();
     expect(result, isTrue);
   });
+}
