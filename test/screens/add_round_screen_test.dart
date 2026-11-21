@@ -43,11 +43,11 @@ void main() {
   });
 
   testWidgets('saving creates the round', (tester) async {
-    final appId = await tester.runAsync(
+    final appId = (await tester.runAsync(
       () => service.createApplication(
         Application(company: 'Acme', role: 'Dev'),
       ),
-    );
+    ))!;
     await tester.pumpWidget(
       MaterialApp(
         home: AddRoundScreen(applicationId: appId, service: service),
@@ -58,7 +58,7 @@ void main() {
       () async => Future<void>.delayed(const Duration(milliseconds: 200)),
     );
     await tester.pumpAndSettle();
-    final rounds = await tester.runAsync(() => service.roundsFor(appId));
+    final rounds = (await tester.runAsync(() => service.roundsFor(appId)))!;
     expect(rounds.length, 1);
     expect(rounds.first.type.name, 'hr');
   });
