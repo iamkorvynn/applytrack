@@ -33,6 +33,7 @@ class AddEditApplicationScreen extends StatefulWidget {
 
 class _AddEditApplicationScreenState extends State<AddEditApplicationScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _scrollController = ScrollController();
   late final TextEditingController _company;
   late final TextEditingController _role;
   late final TextEditingController _city;
@@ -103,6 +104,7 @@ class _AddEditApplicationScreenState extends State<AddEditApplicationScreen> {
     _contactEmail.dispose();
     _resumeVersion.dispose();
     _notes.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -127,6 +129,17 @@ class _AddEditApplicationScreenState extends State<AddEditApplicationScreen> {
   }
 
   Future<void> _save() async {
+    // A ListView disposes fields scrolled off-screen, so Form.validate()
+    // only sees the fields currently built. Check the required values
+    // from their controllers first; when one is empty, scroll it into
+    // view and run validation on the next frame so the error renders.
+    if (_company.text.trim().isEmpty || _role.text.trim().isEmpty) {
+      _scrollController.jumpTo(0);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _formKey.currentState!.validate();
+      });
+      return;
+    }
     if (!_formKey.currentState!.validate()) return;
     final salaryError =
         Validators.salaryRange(_salaryMin.text, _salaryMax.text);
@@ -208,6 +221,7 @@ class _AddEditApplicationScreenState extends State<AddEditApplicationScreen> {
       body: Form(
         key: _formKey,
         child: ListView(
+          controller: _scrollController,
           padding: const EdgeInsets.all(16),
           children: [
             TextFormField(
