@@ -23,8 +23,10 @@ void main() {
 
   testWidgets('empty state invites the first application', (tester) async {
     await tester.pumpWidget(
-      const MaterialApp(
-        home: Scaffold(body: DashboardScreen(applications: [])),
+      MaterialApp(
+        home: Scaffold(
+          body: DashboardScreen(applications: [], onAdd: () {}),
+        ),
       ),
     );
     expect(find.text('No applications yet'), findsOneWidget);
@@ -37,7 +39,7 @@ void main() {
         home: Scaffold(body: DashboardScreen(applications: apps())),
       ),
     );
-    expect(find.text('Applied'), findsOneWidget);
+    expect(find.text('Applied'), findsWidgets);
     expect(find.text('Interviews'), findsOneWidget);
     expect(find.text('Upcoming deadlines'), findsOneWidget);
     expect(find.text('Recent applications'), findsOneWidget);

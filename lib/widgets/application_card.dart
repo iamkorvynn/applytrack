@@ -51,7 +51,9 @@ class ApplicationCard extends StatelessWidget {
                         StatusChip(status: application.status, small: true),
                         const SizedBox(width: 8),
                         if (application.hasSalary)
-                          SalaryText(application: application),
+                          Flexible(
+                            child: SalaryText(application: application),
+                          ),
                       ],
                     ),
                     if (application.deadline != null)

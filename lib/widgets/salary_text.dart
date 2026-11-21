@@ -13,12 +13,10 @@ class SalaryText extends StatelessWidget {
   Widget build(BuildContext context) {
     final label = salaryLabelFor(application);
     if (label.isEmpty) return const SizedBox.shrink();
-    return Flexible(
-      child: Text(
-        label,
-        overflow: TextOverflow.ellipsis,
-        style: Theme.of(context).textTheme.bodySmall,
-      ),
+    return Text(
+      label,
+      overflow: TextOverflow.ellipsis,
+      style: Theme.of(context).textTheme.bodySmall,
     );
   }
 }

@@ -29,7 +29,7 @@ void main() {
     );
     expect(find.textContaining('Overdue'), findsOneWidget);
     expect(find.textContaining('This week'), findsOneWidget);
-    expect(find.textContaining('No deadline'), findsOneWidget);
+    expect(find.text('No deadline (1)'), findsOneWidget);
   });
 
   testWidgets('empty state when nothing has a deadline', (tester) async {
