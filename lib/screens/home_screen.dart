@@ -1,7 +1,12 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../data/settings_store.dart';
 import '../models/application.dart';
+import '../models/interview_round.dart';
 import '../services/application_service.dart';
+import '../services/next_interview.dart';
+import '../services/onboarding_service.dart';
+import '../widgets/welcome_dialog.dart';
 import 'add_edit_application_screen.dart';
 import 'application_detail_screen.dart';
 import 'applications_screen.dart';
@@ -17,11 +22,13 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({
     super.key,
     required this.service,
+    required this.settings,
     required this.themeMode,
     required this.onThemeChanged,
   });
 
   final ApplicationService service;
+  final SettingsStore settings;
   final ThemeMode themeMode;
   final ValueChanged<ThemeMode> onThemeChanged;
 
@@ -32,19 +39,40 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   var _index = 0;
   List<Application> _applications = [];
+  List<InterviewRound> _rounds = [];
+  InterviewRound? _nextInterview;
+  Application? _nextInterviewApp;
   var _loading = true;
 
   @override
   void initState() {
     super.initState();
     _refresh();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final onboarding = await OnboardingService.load();
+      if (!onboarding.hasSeenWelcome && mounted) {
+        await WelcomeDialog.show(context);
+        await onboarding.markWelcomeSeen();
+      }
+    });
   }
 
   Future<void> _refresh() async {
     final apps = await widget.service.applications.getAll();
+    final rounds = await widget.service.rounds.getAll();
     if (!mounted) return;
+    final next = NextInterview.next(rounds);
+    Application? nextApp;
+    if (next != null) {
+      for (final app in apps) {
+        if (app.id == next.applicationId) nextApp = app;
+      }
+    }
     setState(() {
       _applications = apps;
+      _rounds = rounds;
+      _nextInterview = next;
+      _nextInterviewApp = nextApp;
       _loading = false;
     });
   }
@@ -87,6 +115,8 @@ class _HomeScreenState extends State<HomeScreen> {
         onAdd: _openAdd,
         onSeeAllApplications: () => setState(() => _index = 1),
         onSeeAllDeadlines: () => setState(() => _index = 2),
+        nextInterview: _nextInterview,
+        nextInterviewApp: _nextInterviewApp,
       ),
       ApplicationsScreen(
         applications: _applications,
@@ -97,11 +127,13 @@ class _HomeScreenState extends State<HomeScreen> {
         applications: _applications,
         onOpen: _openDetail,
       ),
-      StatsScreen(applications: _applications),
+      StatsScreen(applications: _applications, rounds: _rounds),
       SettingsScreen(
         applications: _applications,
         themeMode: widget.themeMode,
         onThemeChanged: widget.onThemeChanged,
+        settings: widget.settings,
+        service: widget.service,
       ),
     ];
     final titles = [
