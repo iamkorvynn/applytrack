@@ -8,9 +8,9 @@ import '../models/source.dart';
 import '../models/work_mode.dart';
 import '../services/application_service.dart';
 import '../services/duplicate_detector.dart';
-import '../utils/formatters.dart';
 import '../utils/money.dart';
 import '../utils/validators.dart';
+import '../widgets/date_picker_field.dart';
 import '../widgets/status_picker.dart';
 
 /// Form to add a new application or edit an existing one.
@@ -104,41 +104,6 @@ class _AddEditApplicationScreenState extends State<AddEditApplicationScreen> {
     _resumeVersion.dispose();
     _notes.dispose();
     super.dispose();
-  }
-
-  Future<DateTime?> _pickDate(DateTime? current) async {
-    final now = DateTime.now();
-    return showDatePicker(
-      context: context,
-      initialDate: current ?? now,
-      firstDate: DateTime(now.year - 2),
-      lastDate: DateTime(now.year + 2),
-    );
-  }
-
-  Widget _dateField(String label, DateTime? value, ValueChanged<DateTime?> onPick) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      title: Text(label),
-      subtitle: Text(Formatters.date(value)),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (value != null)
-            IconButton(
-              icon: const Icon(Icons.clear),
-              onPressed: () => onPick(null),
-            ),
-          IconButton(
-            icon: const Icon(Icons.calendar_today),
-            onPressed: () async {
-              final picked = await _pickDate(value);
-              if (picked != null) onPick(picked);
-            },
-          ),
-        ],
-      ),
-    );
   }
 
   DropdownButtonFormField<T> _dropdown<T>(
@@ -335,20 +300,20 @@ class _AddEditApplicationScreenState extends State<AddEditApplicationScreen> {
                 if (value != null) setState(() => _status = value);
               },
             ),
-            _dateField(
-              'Date applied',
-              _dateApplied,
-              (value) => setState(() => _dateApplied = value),
+            DatePickerField(
+              label: 'Date applied',
+              value: _dateApplied,
+              onPick: (value) => setState(() => _dateApplied = value),
             ),
-            _dateField(
-              'Application deadline',
-              _deadline,
-              (value) => setState(() => _deadline = value),
+            DatePickerField(
+              label: 'Application deadline',
+              value: _deadline,
+              onPick: (value) => setState(() => _deadline = value),
             ),
-            _dateField(
-              'Follow-up date',
-              _followUpDate,
-              (value) => setState(() => _followUpDate = value),
+            DatePickerField(
+              label: 'Follow-up date',
+              value: _followUpDate,
+              onPick: (value) => setState(() => _followUpDate = value),
             ),
             TextFormField(
               controller: _contactName,
