@@ -33,7 +33,7 @@ void main() {
   });
 
   testWidgets('tapping a round opens the outcome dialog', (tester) async {
-    final (appId, app) = await tester.runAsync(() async {
+    final (appId, app) = (await tester.runAsync(() async {
       final createdId = await service.createApplication(
         Application(company: 'Acme', role: 'Dev'),
       );
@@ -42,7 +42,7 @@ void main() {
       );
       final loaded = (await service.applications.getById(createdId))!;
       return (createdId, loaded);
-    });
+    }))!;
     await tester.pumpWidget(
       MaterialApp(
         home: ApplicationDetailScreen(application: app, service: service),
@@ -62,7 +62,7 @@ void main() {
       await Future<void>.delayed(const Duration(milliseconds: 200));
     });
     await tester.pump();
-    final rounds = await tester.runAsync(() => service.roundsFor(appId));
+    final rounds = (await tester.runAsync(() => service.roundsFor(appId)))!;
     expect(rounds.first.outcome, RoundOutcome.cleared);
   });
 }
