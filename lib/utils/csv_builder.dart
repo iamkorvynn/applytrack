@@ -1,5 +1,6 @@
 import '../models/application.dart';
 import '../models/application_status.dart';
+import 'application_age.dart';
 import '../models/job_type.dart';
 import '../models/salary_period.dart';
 import '../models/source.dart';
@@ -27,6 +28,7 @@ class CsvBuilder {
     'Job link',
     'Resume version',
     'Notes',
+    'Days since applied',
   ];
 
   static String escape(String value) {
@@ -68,6 +70,7 @@ class CsvBuilder {
         app.jobUrl,
         app.resumeVersion,
         app.notes,
+        ApplicationAge.daysSinceApplied(app)?.toString() ?? '',
       ];
       lines.add(row.map(escape).join(','));
     }
