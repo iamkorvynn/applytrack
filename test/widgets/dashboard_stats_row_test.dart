@@ -21,6 +21,6 @@ void main() {
     expect(find.text('Interviews'), findsOneWidget);
     expect(find.text('Offers'), findsOneWidget);
     expect(find.text('This week'), findsOneWidget);
-    expect(find.text('3'), findsOneWidget);
+    expect(find.text('3'), findsNWidgets(2));
   });
 }
