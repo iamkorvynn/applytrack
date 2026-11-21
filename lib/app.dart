@@ -65,6 +65,7 @@ class _ApplyTrackAppState extends State<ApplyTrackApp> {
             )
           : HomeScreen(
               service: service,
+              settings: _settings!,
               themeMode: _themeMode,
               onThemeChanged: _changeTheme,
             ),
