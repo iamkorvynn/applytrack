@@ -37,7 +37,7 @@ void main() {
         ),
       ),
     );
-    expect(find.textContaining('streak'), findsOneWidget);
+    expect(find.text('Application streak'), findsOneWidget);
     expect(find.textContaining('first interview'), findsOneWidget);
     expect(find.textContaining('Median top pay'), findsOneWidget);
   });
