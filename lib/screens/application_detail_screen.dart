@@ -7,6 +7,7 @@ import '../models/job_type.dart';
 import '../models/source.dart';
 import '../services/application_service.dart';
 import '../services/link_service.dart';
+import '../utils/application_age.dart';
 import '../utils/csv_builder.dart';
 import '../utils/formatters.dart';
 import '../widgets/checklist_tile.dart';
@@ -92,6 +93,26 @@ class _ApplicationDetailScreenState extends State<ApplicationDetailScreen> {
     Navigator.of(context).pop();
   }
 
+  Future<void> _changeRoundOutcome(InterviewRound round) async {
+    final picked = await showDialog<RoundOutcome>(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: Text('${round.type.label} outcome'),
+        children: RoundOutcome.values
+            .map(
+              (outcome) => SimpleDialogOption(
+                onPressed: () => Navigator.of(context).pop(outcome),
+                child: Text(outcome.label),
+              ),
+            )
+            .toList(),
+      ),
+    );
+    if (picked == null || picked == round.outcome) return;
+    await widget.service.updateRound(round.copyWith(outcome: picked));
+    await _load();
+  }
+
   Future<void> _addRound() async {
     final created = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
@@ -170,6 +191,11 @@ class _ApplicationDetailScreenState extends State<ApplicationDetailScreen> {
             subtitle: Text(Formatters.date(_app.dateApplied)),
           ),
           ListTile(
+            leading: const Icon(Icons.history),
+            title: const Text('Applied'),
+            subtitle: Text(ApplicationAge.label(_app)),
+          ),
+          ListTile(
             leading: const Icon(Icons.event),
             title: const Text('Deadline'),
             subtitle: Text(
@@ -224,6 +250,7 @@ class _ApplicationDetailScreenState extends State<ApplicationDetailScreen> {
           ..._rounds.map(
             (round) => RoundTile(
               round: round,
+              onTap: () => _changeRoundOutcome(round),
               onDelete: () async {
                 await widget.service.deleteRound(round.id ?? -1);
                 await _load();
