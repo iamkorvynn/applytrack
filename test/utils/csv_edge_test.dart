@@ -23,7 +23,7 @@ void main() {
     expect(row.split(',')[5], '0');
   });
 
-  test('header has exactly 17 columns', () {
-    expect(CsvBuilder.headers.length, 17);
+  test('header has exactly 18 columns', () {
+    expect(CsvBuilder.headers.length, 18);
   });
 }
