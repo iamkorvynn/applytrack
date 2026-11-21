@@ -35,10 +35,10 @@ void main() {
         ),
       ),
     );
-    await tester.scrollUntilVisible(find.text('Top sources'), 200);
     expect(find.text('Pipeline funnel'), findsOneWidget);
     expect(find.text('Response rate'), findsOneWidget);
-    expect(find.text('Top sources'), findsOneWidget);
     expect(find.textContaining('% of applications'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Top sources'), 200);
+    expect(find.text('Top sources'), findsOneWidget);
   });
 }
