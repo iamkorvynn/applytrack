@@ -33,13 +33,16 @@ void main() {
   });
 
   testWidgets('tapping a round opens the outcome dialog', (tester) async {
-    final appId = await service.createApplication(
-      Application(company: 'Acme', role: 'Dev'),
-    );
-    await service.addRound(
-      InterviewRound(applicationId: appId, type: RoundType.hr),
-    );
-    final app = (await service.applications.getById(appId))!;
+    final (appId, app) = await tester.runAsync(() async {
+      final createdId = await service.createApplication(
+        Application(company: 'Acme', role: 'Dev'),
+      );
+      await service.addRound(
+        InterviewRound(applicationId: createdId, type: RoundType.hr),
+      );
+      final loaded = (await service.applications.getById(createdId))!;
+      return (createdId, loaded);
+    });
     await tester.pumpWidget(
       MaterialApp(
         home: ApplicationDetailScreen(application: app, service: service),
@@ -52,7 +55,14 @@ void main() {
     expect(find.text('Cleared'), findsOneWidget);
     await tester.tap(find.text('Cleared'));
     await tester.pumpAndSettle();
-    final rounds = await service.roundsFor(appId);
+    // The tap handler saves the outcome through SQLite; let that real
+    // async work finish (two turns: save, then reload) before checking.
+    await tester.runAsync(() async {
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+    });
+    await tester.pump();
+    final rounds = await tester.runAsync(() => service.roundsFor(appId));
     expect(rounds.first.outcome, RoundOutcome.cleared);
   });
 }
