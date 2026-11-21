@@ -38,6 +38,16 @@ class ApplicationService {
     await applications.delete(id);
   }
 
+  /// Delete everything: all applications, rounds, checklist items,
+  /// and cancel every reminder. Used by Settings > Clear all data.
+  Future<void> clearAllData() async {
+    await _notifications.cancelAll();
+    final apps = await applications.getAll();
+    for (final app in apps) {
+      await applications.delete(app.id ?? -1);
+    }
+  }
+
   Future<int> addRound(InterviewRound round) =>
       rounds.insert(round);
 
