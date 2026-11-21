@@ -45,6 +45,15 @@ class InterviewDao {
     return rows.map(InterviewRound.fromMap).toList();
   }
 
+  /// Every round in the database, soonest scheduled first.
+  Future<List<InterviewRound>> getAll() async {
+    final rows = await db.query(
+      'interview_rounds',
+      orderBy: 'scheduled_at ASC',
+    );
+    return rows.map(InterviewRound.fromMap).toList();
+  }
+
   /// The next scheduled round across all applications, if any.
   Future<InterviewRound?> nextUpcoming() async {
     final now = DateTime.now().toIso8601String();
