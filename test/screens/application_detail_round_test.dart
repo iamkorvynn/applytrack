@@ -52,9 +52,10 @@ void main() {
     await tester.scrollUntilVisible(
       find.text('HR round'),
       200,
-      scrollable: find.descendant(
-        of: find.byType(ListView),
-        matching: find.byType(Scrollable),
+      scrollable: find.byWidgetPredicate(
+        (widget) =>
+            widget is Scrollable &&
+            widget.axisDirection == AxisDirection.down,
       ),
     );
     await tester.tap(find.text('HR round'));

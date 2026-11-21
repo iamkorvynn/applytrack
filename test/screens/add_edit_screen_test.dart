@@ -53,9 +53,10 @@ void main() {
     await tester.scrollUntilVisible(
       find.byType(FilledButton),
       200,
-      scrollable: find.descendant(
-        of: find.byType(ListView),
-        matching: find.byType(Scrollable),
+      scrollable: find.byWidgetPredicate(
+        (widget) =>
+            widget is Scrollable &&
+            widget.axisDirection == AxisDirection.down,
       ),
     );
     await tester.tap(find.byType(FilledButton));
@@ -75,9 +76,10 @@ void main() {
     await tester.scrollUntilVisible(
       find.byType(FilledButton),
       200,
-      scrollable: find.descendant(
-        of: find.byType(ListView),
-        matching: find.byType(Scrollable),
+      scrollable: find.byWidgetPredicate(
+        (widget) =>
+            widget is Scrollable &&
+            widget.axisDirection == AxisDirection.down,
       ),
     );
     await tester.tap(find.byType(FilledButton));

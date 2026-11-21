@@ -41,18 +41,20 @@ void main() {
     await tester.scrollUntilVisible(
       find.textContaining('first interview'),
       200,
-      scrollable: find.descendant(
-        of: find.byType(ListView),
-        matching: find.byType(Scrollable),
+      scrollable: find.byWidgetPredicate(
+        (widget) =>
+            widget is Scrollable &&
+            widget.axisDirection == AxisDirection.down,
       ),
     );
     expect(find.textContaining('first interview'), findsOneWidget);
     await tester.scrollUntilVisible(
       find.textContaining('Median top pay'),
       200,
-      scrollable: find.descendant(
-        of: find.byType(ListView),
-        matching: find.byType(Scrollable),
+      scrollable: find.byWidgetPredicate(
+        (widget) =>
+            widget is Scrollable &&
+            widget.axisDirection == AxisDirection.down,
       ),
     );
     expect(find.textContaining('Median top pay'), findsOneWidget);
