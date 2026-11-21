@@ -33,14 +33,16 @@ void main() {
 
   testWidgets('shows how long ago the application was sent',
       (tester) async {
-    final id = await service.createApplication(
-      Application(
-        company: 'Acme',
-        role: 'Dev',
-        dateApplied: DateTime.now().subtract(const Duration(days: 5)),
-      ),
-    );
-    final app = (await service.applications.getById(id))!;
+    final app = await tester.runAsync(() async {
+      final id = await service.createApplication(
+        Application(
+          company: 'Acme',
+          role: 'Dev',
+          dateApplied: DateTime.now().subtract(const Duration(days: 5)),
+        ),
+      );
+      return (await service.applications.getById(id))!;
+    });
     await tester.pumpWidget(
       MaterialApp(
         home: ApplicationDetailScreen(application: app, service: service),
