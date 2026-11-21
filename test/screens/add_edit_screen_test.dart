@@ -56,9 +56,11 @@ void main() {
       scrollable: find.byWidgetPredicate(
         (widget) =>
             widget is Scrollable &&
-            widget.axisDirection == AxisDirection.down,
+            widget.axisDirection == AxisDirection.down &&
+            widget.restorationId == null,
       ),
     );
+    await tester.ensureVisible(find.byType(FilledButton));
     await tester.tap(find.byType(FilledButton));
     await tester.pump();
     expect(find.text('Company is required'), findsOneWidget);
@@ -79,9 +81,11 @@ void main() {
       scrollable: find.byWidgetPredicate(
         (widget) =>
             widget is Scrollable &&
-            widget.axisDirection == AxisDirection.down,
+            widget.axisDirection == AxisDirection.down &&
+            widget.restorationId == null,
       ),
     );
+    await tester.ensureVisible(find.byType(FilledButton));
     await tester.tap(find.byType(FilledButton));
     await tester.runAsync(
       () async => Future<void>.delayed(const Duration(milliseconds: 200)),

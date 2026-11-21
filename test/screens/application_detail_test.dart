@@ -60,7 +60,8 @@ void main() {
       scrollable: find.byWidgetPredicate(
         (widget) =>
             widget is Scrollable &&
-            widget.axisDirection == AxisDirection.down,
+            widget.axisDirection == AxisDirection.down &&
+            widget.restorationId == null,
       ),
     );
     expect(find.textContaining('Interview prep'), findsOneWidget);
