@@ -57,7 +57,10 @@ void main() {
     await tester.scrollUntilVisible(
       find.textContaining('Interview prep'),
       200,
-      scrollable: find.byType(ListView),
+      scrollable: find.descendant(
+        of: find.byType(ListView),
+        matching: find.byType(Scrollable),
+      ),
     );
     expect(find.textContaining('Interview prep'), findsOneWidget);
   });

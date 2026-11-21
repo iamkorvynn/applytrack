@@ -53,7 +53,10 @@ void main() {
     await tester.scrollUntilVisible(
       find.byType(FilledButton),
       200,
-      scrollable: find.byType(ListView),
+      scrollable: find.descendant(
+        of: find.byType(ListView),
+        matching: find.byType(Scrollable),
+      ),
     );
     await tester.tap(find.byType(FilledButton));
     await tester.pump();
@@ -72,7 +75,10 @@ void main() {
     await tester.scrollUntilVisible(
       find.byType(FilledButton),
       200,
-      scrollable: find.byType(ListView),
+      scrollable: find.descendant(
+        of: find.byType(ListView),
+        matching: find.byType(Scrollable),
+      ),
     );
     await tester.tap(find.byType(FilledButton));
     await tester.runAsync(

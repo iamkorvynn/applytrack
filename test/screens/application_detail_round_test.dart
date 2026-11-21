@@ -52,7 +52,10 @@ void main() {
     await tester.scrollUntilVisible(
       find.text('HR round'),
       200,
-      scrollable: find.byType(ListView),
+      scrollable: find.descendant(
+        of: find.byType(ListView),
+        matching: find.byType(Scrollable),
+      ),
     );
     await tester.tap(find.text('HR round'));
     await tester.pumpAndSettle();
