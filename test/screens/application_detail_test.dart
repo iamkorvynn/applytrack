@@ -54,6 +54,11 @@ void main() {
     expect(find.text('Flutter Dev'), findsOneWidget);
     expect(find.text('Interview'), findsOneWidget);
     expect(find.text('Interview rounds'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.textContaining('Interview prep'),
+      200,
+      scrollable: find.byType(ListView),
+    );
     expect(find.textContaining('Interview prep'), findsOneWidget);
   });
 }

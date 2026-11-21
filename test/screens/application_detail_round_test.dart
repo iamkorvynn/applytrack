@@ -49,6 +49,11 @@ void main() {
       ),
     );
     await tester.pump();
+    await tester.scrollUntilVisible(
+      find.text('HR round'),
+      200,
+      scrollable: find.byType(ListView),
+    );
     await tester.tap(find.text('HR round'));
     await tester.pumpAndSettle();
     expect(find.text('HR round outcome'), findsOneWidget);
