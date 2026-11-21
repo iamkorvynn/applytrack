@@ -50,6 +50,7 @@ void main() {
         home: AddEditApplicationScreen(service: service),
       ),
     );
+    await tester.scrollUntilVisible(find.byType(FilledButton), 200);
     await tester.tap(find.byType(FilledButton));
     await tester.pump();
     expect(find.text('Company is required'), findsOneWidget);
@@ -64,9 +65,15 @@ void main() {
     );
     await tester.enterText(find.byType(TextFormField).first, 'Acme');
     await tester.enterText(find.byType(TextFormField).at(1), 'Dev');
+    await tester.scrollUntilVisible(find.byType(FilledButton), 200);
     await tester.tap(find.byType(FilledButton));
+    await tester.runAsync(
+      () async => Future<void>.delayed(const Duration(milliseconds: 200)),
+    );
     await tester.pumpAndSettle();
-    final all = await service.applications.getAll();
+    final all = await tester.runAsync(
+      () => service.applications.getAll(),
+    );
     expect(all.length, 1);
     expect(all.first.company, 'Acme');
   });
