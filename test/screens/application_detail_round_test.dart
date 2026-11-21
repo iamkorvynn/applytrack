@@ -49,6 +49,12 @@ void main() {
       ),
     );
     await tester.pump();
+    // The detail screen loads its rounds from SQLite in initState;
+    // let that real async work finish before scrolling to the round.
+    await tester.runAsync(
+      () async => Future<void>.delayed(const Duration(milliseconds: 200)),
+    );
+    await tester.pump();
     await tester.scrollUntilVisible(
       find.text('HR round'),
       200,

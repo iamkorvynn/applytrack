@@ -61,8 +61,23 @@ void main() {
       ),
     );
     await tester.ensureVisible(find.byType(FilledButton));
+    // Render the scroll jump before tapping: tap reads the button's
+    // current geometry, which is stale until a frame is pumped.
+    await tester.pump();
     await tester.tap(find.byType(FilledButton));
     await tester.pump();
+    // The error shows on the company field at the top of the form,
+    // which is off-screen after scrolling down to the save button.
+    await tester.scrollUntilVisible(
+      find.text('Company is required'),
+      -200,
+      scrollable: find.byWidgetPredicate(
+        (widget) =>
+            widget is Scrollable &&
+            widget.axisDirection == AxisDirection.down &&
+            widget.restorationId == null,
+      ),
+    );
     expect(find.text('Company is required'), findsOneWidget);
   });
 
@@ -86,6 +101,9 @@ void main() {
       ),
     );
     await tester.ensureVisible(find.byType(FilledButton));
+    // Render the scroll jump before tapping: tap reads the button's
+    // current geometry, which is stale until a frame is pumped.
+    await tester.pump();
     await tester.tap(find.byType(FilledButton));
     await tester.runAsync(
       () async => Future<void>.delayed(const Duration(milliseconds: 200)),
