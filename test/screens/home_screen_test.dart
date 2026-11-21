@@ -3,6 +3,7 @@ import 'package:applytrack/data/application_dao.dart';
 import 'package:applytrack/data/checklist_dao.dart';
 import 'package:applytrack/data/interview_dao.dart';
 import 'package:applytrack/data/settings_store.dart';
+import 'package:applytrack/models/application.dart';
 import 'package:applytrack/screens/home_screen.dart';
 import 'package:applytrack/services/application_service.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -47,6 +48,12 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    // HomeScreen loads from SQLite in initState; that work needs the
+    // real event loop, so let it finish before rendering assertions.
+    await tester.runAsync(
+      () async => Future<void>.delayed(const Duration(milliseconds: 200)),
+    );
+    await tester.pump();
   }
 
   testWidgets('shows dashboard empty state at first', (tester) async {
