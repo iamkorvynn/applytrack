@@ -46,10 +46,17 @@ void main() {
         ),
       ),
     );
-    await tester.pumpAndSettle();
+    // No pumpAndSettle: the loading spinner animates forever.
+    await tester.pump();
+    await tester.pump();
+    await tester.runAsync(
+      () async => Future<void>.delayed(const Duration(milliseconds: 200)),
+    );
+    await tester.pump();
     expect(find.text('Welcome to ApplyTrack'), findsOneWidget);
     await tester.tap(find.text('Start tracking'));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump();
     expect(find.text('Welcome to ApplyTrack'), findsNothing);
   });
 }
