@@ -33,7 +33,7 @@ void main() {
   });
 
   testWidgets('shows role, status and sections', (tester) async {
-    final app = await tester.runAsync(() async {
+    final app = (await tester.runAsync(() async {
       final id = await service.createApplication(
         Application(
           company: 'Acme',
@@ -44,7 +44,7 @@ void main() {
         ),
       );
       return (await service.applications.getById(id))!;
-    });
+    }))!;
     await tester.pumpWidget(
       MaterialApp(
         home: ApplicationDetailScreen(application: app, service: service),
