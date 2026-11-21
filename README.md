@@ -47,3 +47,10 @@ flutter build apk --release
 The release APK needs `android.permission.INTERNET` in
 `android/app/src/main/AndroidManifest.xml` (already added) so job links
 can open in the browser.
+
+## Roadmap
+
+- Resume versions as files, not just names.
+- Interview calendar view across all applications.
+- Optional cloud backup (opt-in, the app stays fully usable offline).
+- Application deadline import from a job link.
