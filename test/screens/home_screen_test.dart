@@ -47,12 +47,14 @@ void main() {
         ),
       ),
     );
-    await tester.pumpAndSettle();
+    await tester.pump();
     // HomeScreen loads from SQLite in initState; that work needs the
     // real event loop, so let it finish before rendering assertions.
+    // (No pumpAndSettle here: the loading spinner animates forever.)
     await tester.runAsync(
       () async => Future<void>.delayed(const Duration(milliseconds: 200)),
     );
+    await tester.pump();
     await tester.pump();
   }
 
