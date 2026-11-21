@@ -71,9 +71,9 @@ void main() {
       () async => Future<void>.delayed(const Duration(milliseconds: 200)),
     );
     await tester.pumpAndSettle();
-    final all = await tester.runAsync(
+    final all = (await tester.runAsync(
       () => service.applications.getAll(),
-    );
+    ))!;
     expect(all.length, 1);
     expect(all.first.company, 'Acme');
   });
